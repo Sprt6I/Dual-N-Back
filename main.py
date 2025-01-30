@@ -63,6 +63,16 @@ class App__(QMainWindow):
         self.main_widget.setStyleSheet("background-color: gray;")
         
         self.exercise_layout = QVBoxLayout()
+        
+        self.start_button = QPushButton("Start")
+        self.start_button.clicked.connect(self.Main_Game)
+        self.exercise_layout.addWidget(self.start_button)
+        
+        self.end_button = QPushButton("Cancel")
+        self.end_button.clicked.connect(self.End_Game)
+        self.exercise_layout.addWidget(self.end_button)
+        self.end_button.hide()
+        
         self.grid_layout = QGridLayout()
         
         for a, b in self.nodes.items():
@@ -85,6 +95,8 @@ class App__(QMainWindow):
         self.setCentralWidget(self.main_widget)
         
     def Main_Game(self):
+        self.start_button.hide()
+        self.end_button.show()
         self.moves = 25 # number of nodes in round
         self.counter = 0
         self.back = 1
@@ -93,6 +105,15 @@ class App__(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.Update_Game)
         self.timer.start(2500)
+    
+    def End_Game(self):
+        self.timer.stop()
+        self.start_button.show()
+        self.end_button.hide()
+        
+        for i in self.nodes:
+            self.nodes[i][2].hide()
+            self.nodes[i][3].hide()
         
     def Update_Game(self):
         if self.counter >= self.moves:
@@ -126,7 +147,7 @@ class App__(QMainWindow):
             if self.clicked_d:
                 self.shape_good += 1
         else:
-            if self.shape_a: self.shape_wrong += 1
+            if self.clicked_a: self.shape_wrong += 1
             
         self.same_position, self.same_number, self.same_color, self.same_shape = False, False, False, False
         self.clicked_a, self.clicked_w, self.clicked_s, self.clicked_d = False, False, False, False
